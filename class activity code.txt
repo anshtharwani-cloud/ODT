@@ -1,0 +1,114 @@
+from machine import Pin
+import time
+import random
+import neopixel
+
+
+golu = neopixel.NeoPixel(Pin(14),16)
+
+pb = Pin(18, Pin.IN, Pin.PULL_UP)   
+p = Pin(32, Pin.IN, Pin.PULL_UP)
+ir = Pin(26, Pin.IN, Pin.PULL_UP)
+
+
+astro = Pin(25, Pin.OUT)   
+astro1 = Pin(33, Pin.OUT)
+buzz = Pin(22, Pin.OUT)
+
+led = []
+inputbutton = []
+length = 5
+
+    
+
+
+while True:
+    
+    led = []
+    
+    for i in range(length):
+        led.append(random.choice([1,2]))
+    
+    print("sequence:", led)
+    
+    for i in range(length):    
+        if led[i] == 1:
+            astro.on()
+            time.sleep(0.4)
+            astro.off()
+            time.sleep(0.3)
+            
+        if led[i] == 2:
+            astro1.on()
+            time.sleep(0.4)
+            astro1.off()
+            time.sleep(0.3)
+      
+    inputbutton = []
+         
+    for i in range(length):
+
+        while True:
+         
+           
+            if pb.value() == 0:
+                inputbutton.append(1)
+                astro.on()
+                time.sleep(0.1)
+                astro.off()
+                time.sleep(0.1)
+                print("Pressed: 1")
+                time.sleep(0.1)
+                break
+
+            if p.value() == 0:
+                inputbutton.append(2)
+                astro1.on()
+                time.sleep(0.1)
+                astro1.off()
+                time.sleep(0.1)
+      
+                print("Pressed: 2")
+                time.sleep(0.1)
+                break
+   
+    if inputbutton == led:
+        print("Correct")
+        buzz.on()
+        
+                       
+        time.sleep(0.1)
+        buzz.off()
+        time.sleep(0.1)
+        buzz.on()
+        time.sleep(0.1)
+        buzz.off()
+        
+        
+        for i in range (0,16):
+            golu[i] = (0,255,0)
+        golu.write()
+        time.sleep(0.7)
+        for i in range (0,16):
+            golu[i] = (0,0,0)
+        golu.write()
+        time.sleep(0.3)
+        
+    else:
+        print("Wrong")
+        buzz.on()
+        time.sleep(0.5)
+        buzz.off()
+         
+        for i in range (0,16):
+            golu[i] = (255,0,0)
+        golu.write()
+        time.sleep(0.5)
+        for i in range (0,16):
+            golu[i] = (0,0,0)
+        golu.write()
+        time.sleep(0.3)
+        
+
+    time.sleep(2)
+
